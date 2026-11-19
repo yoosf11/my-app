@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام حضور محاضرة مبادئ إدارة الأعمال</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0F2942">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="style.css">
+    <!-- مكتبة Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- مكتبة تصدير الإكسل -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <header class="top-bar">
+        <div class="header-info">
+            <img src="logo.png" alt="شعار المعهد" class="institute-logo" onerror="this.style.display='none'">
+            <div>
+                <h1 id="txt-course">مبادئ إدارة الأعمال</h1>
+                <p id="txt-doctor">د. أحمد سليمان</p>
+            </div>
+        </div>
+        <button id="lang-toggle" class="btn-outline" onclick="toggleLanguage()">EN</button>
+    </header>
+
+    <!-- شاشة تسجيل الدخول -->
+    <main id="login-screen" class="container card">
+        <div class="login-header">
+            <h2 id="txt-login-title">تسجيل الدخول للنظام</h2>
+            <p id="txt-login-sub">أدخل اسم المستخدم وكلمة المرور</p>
+        </div>
+        
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label for="username" id="lbl-username">اسم المستخدم</label>
+                <input type="text" id="username" required placeholder="مثال: دكتور احمد سليمان">
+            </div>
+            <div class="input-group">
+                <label for="password" id="lbl-password">كلمة المرور</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-primary" id="btn-login">دخول</button>
+        </form>
+        <div id="login-msg" class="alert-box hidden"></div>
+    </main>
+
+    <!-- لوحة تحكم الطالب -->
+    <section id="student-screen" class="container card hidden">
+        <div class="user-bar">
+            <span id="student-welcome">مرحباً</span>
+            <button onclick="logout()" class="btn-danger-sm" id="btn-logout-stu">خروج</button>
+        </div>
+
+        <div class="attendance-box">
+            <h3 id="txt-stu-title">تسجيل حضور المحاضرة</h3>
+            <p class="hint" id="txt-stu-hint">يجب السماح بالوصول للموقع (GPS) وإدخال اسمك الثلاثي المطابق لحسابك</p>
+            
+            <div class="input-group">
+                <label for="student-fullname" id="lbl-fullname">الاسم الثلاثي للطالب</label>
+                <input type="text" id="student-fullname" placeholder="اكتب اسمك الثلاثي هنا">
+            </div>
+
+            <div id="location-status" class="status-badge">جاري التحقق من الموقع...</div>
+
+            <button onclick="submitAttendance()" class="btn-primary" id="btn-attend">تسجيل الحضور الآن</button>
+        </div>
+        <div id="student-msg" class="alert-box hidden"></div>
+    </section>
+
+    <!-- لوحة تحكم الأدمن (د. أحمد سليمان / يوسف طاهر الشعراوي) -->
+    <section id="admin-screen" class="container hidden">
+        <div class="card user-bar">
+            <div>
+                <strong id="admin-welcome">لوحة الإدارة</strong>
+                <span class="badge-admin" id="txt-admin-badge">صلاحيات كاملة</span>
+            </div>
+            <button onclick="logout()" class="btn-danger-sm" id="btn-logout-adm">خروج</button>
+        </div>
+
+        <!-- أزرار التنقل بين أقسام الأدمن -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-attendance')" id="nav-att">سجل الحضور</button>
+            <button class="tab-btn" onclick="switchTab('tab-users')" id="nav-users">إدارة الطلاب والمستخدمين</button>
+            <button class="tab-btn" onclick="switchTab('tab-alerts')" id="nav-alerts">التنبيهات <span id="alert-count" class="count-pill">0</span></button>
+        </div>
+
+        <!-- تبويب 1: سجل الحضور وتصدير إكسل -->
+        <div id="tab-attendance" class="card tab-content">
+            <div class="section-header">
+                <h3 id="txt-att-list">كشف الحضور المسجل</h3>
+                <div class="actions-row">
+                    <button onclick="sortAttendanceAlpha()" class="btn-secondary" id="btn-sort-att">فرز أ - ي</button>
+                    <button onclick="exportToExcel()" class="btn-success" id="btn-excel">سحب شيت إكسل (Excel)</button>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="attendance-table">
+                    <thead>
+                        <tr>
+                            <th id="th-name">الاسم الثلاثي</th>
+                            <th id="th-day">اليوم</th>
+                            <th id="th-date">التاريخ</th>
+                            <th id="th-time">الساعة</th>
+                            <th id="th-loc">الموقع</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendance-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- تبويب 2: إضافة وحذف وتحذير وفرز المستخدمين -->
+        <div id="tab-users" class="card tab-content hidden">
+            <h3 id="txt-add-user">إضافة مستخدم / طالب جديد</h3>
+            <form id="add-user-form" onsubmit="addNewUser(event)" class="grid-form">
+                <input type="text" id="new-fullname" placeholder="الاسم الثلاثي الكامل" required>
+                <input type="text" id="new-username" placeholder="اسم المستخدم للدخول" required>
+                <input type="text" id="new-password" placeholder="كلمة المرور" required>
+                <select id="new-role">
+                    <option value="student">طالب (تسجيل حضور فقط)</option>
+                    <option value="admin">أدمن (صلاحيات كاملة)</option>
+                </select>
+                <button type="submit" class="btn-primary" id="btn-create-user">إضافة الحساب</button>
+            </form>
+
+            <hr class="divider">
+
+            <div class="section-header">
+                <h3 id="txt-users-list">قائمة المستخدمين (السعة 2000+ طالب)</h3>
+                <button onclick="sortUsersAlpha()" class="btn-secondary" id="btn-sort-users">فرز من أ إلى ي</button>
+            </div>
+            <div class="table-wrapper">
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>الاسم الثلاثي</th>
+                            <th>اسم المستخدم</th>
+                            <th>الصلاحية</th>
+                            <th>التحذيرات</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- تبويب 3: التنبيهات التلقائية -->
+        <div id="tab-alerts" class="card tab-content hidden">
+            <div class="section-header">
+                <h3 id="txt-alerts-title">تنبيهات النظام التلقائية</h3>
+                <button onclick="clearAlerts()" class="btn-danger-sm" id="btn-clear-alerts">مسح الكل</button>
+            </div>
+            <div id="alerts-list" class="alerts-container"></div>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+:root {
+    --primary: #0F2942;       /* اللون الأساسي: كحلي أكاديمي */
+    --primary-light: #1B436B;
+    --accent: #C59B27;        /* اللون الثانوي: ذهبي هادئ متناسق مع الكحلي */
+    --bg: #F4F7FA;            /* خلفية مريحة للعين */
+    --card-bg: #FFFFFF;
+    --text: #1E293B;
+    --muted: #64748B;
+    --border: #E2E8F0;
+    --success: #15803D;
+    --danger: #B91C1C;
+    --warning: #B45309;
+    --radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* الشريط العلوي */
+.top-bar {
+    background-color: var(--primary);
+    color: #FFFFFF;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--accent);
+    box-shadow: 0 2px 10px rgba(15, 41, 66, 0.15);
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.institute-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #FFFFFF;
+    border: 2px solid var(--accent);
+}
+
+.top-bar h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.top-bar p {
+    font-size: 0.85rem;
+    color: #E2E8F0;
+}
+
+/* الحاويات والكروت */
+.container {
+    max-width: 960px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: 0 4px 16px rgba(15, 41, 66, 0.06);
+    border: 1px solid var(--border);
+    margin-bottom: 18px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-header h2 {
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+.login-header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+/* الحقول والأزرار */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
+input, select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: #FAFBFD;
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #FFFFFF;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary);
+    color: #FFFFFF;
+    font-size: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-light);
+}
+
+.btn-outline {
+    padding: 7px 14px;
+    background: transparent;
+    color: #FFFFFF;
+    border: 1.5px solid var(--accent);
+    font-size: 0.85rem;
+}
+
+.btn-secondary {
+    padding: 8px 14px;
+    background: var(--bg);
+    color: var(--primary);
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+}
+
+.btn-success {
+    padding: 8px 14px;
+    background: var(--success);
+    color: #FFFFFF;
+    font-size: 0.85rem;
+}
+
+.btn-danger-sm {
+    padding: 6px 12px;
+    background: var(--danger);
+    color: #FFFFFF;
+    font-size: 0.8rem;
+}
+
+.btn-warn-sm {
+    padding: 6px 10px;
+    background: var(--warning);
+    color: #FFFFFF;
+    font-size: 0.8rem;
+}
+
+/* شريط المستخدم والتبويبات */
+.user-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+}
+
+.badge-admin {
+    background: var(--primary);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    margin-inline-start: 8px;
+    font-weight: 700;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 11px;
+    background: var(--card-bg);
+    color: var(--primary);
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: #FFFFFF;
+    border-color: var(--primary);
+}
+
+.count-pill {
+    background: var(--accent);
+    color: var(--primary);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    margin-inline-start: 4px;
+}
+
+/* الجداول والنماذج */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.actions-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 22px 0;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+th, td {
+    padding: 11px 12px;
+    text-align: start;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background-color: var(--bg);
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* التنبيهات والحالات */
+.alert-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.alert-error {
+    background: #FEE2E2;
+    color: var(--danger);
+    border: 1px solid #FCA5A5;
+}
+
+.alert-success {
+    background: #DCFCE7;
+    color: var(--success);
+    border: 1px solid #86EFAC;
+}
+
+.alert-warn {
+    background: #FEF3C7;
+    color: var(--warning);
+    border: 1px solid #FCD34D;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+    background: #E0F2FE;
+    color: #0369A1;
+}
+
+.hint {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+}
+
+.alerts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.alert-item {
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #FFFBEB;
+    border-inline-start: 4px solid var(--accent);
+    font-size: 0.9rem;
+}
+
+.alert-item small {
+    display: block;
+    color: var(--muted);
+    margin-top: 4px;
+}
